@@ -3,7 +3,6 @@ package View;
 
 
 import DAO.LivroDAO;
-import View.TelaAdm;
 import javax.swing.table.DefaultTableModel;
 import model.Livro;
 import javax.swing.JOptionPane;
@@ -24,7 +23,7 @@ public class TelaListagemLivro extends javax.swing.JFrame {
     /**
      * Método para carregar os livros na JTable
      */
-    private void carregarTabela() {
+    void carregarTabela() {
         DefaultTableModel model = (DefaultTableModel) tblLivros.getModel();
         model.setRowCount(0); // limpa tabela
 
@@ -54,6 +53,7 @@ public class TelaListagemLivro extends javax.swing.JFrame {
         tblLivros = new javax.swing.JTable();
         btnExcluir = new javax.swing.JButton();
         btnVoltar = new javax.swing.JButton();
+        btnEditar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -92,30 +92,37 @@ public class TelaListagemLivro extends javax.swing.JFrame {
             }
         });
 
+        btnEditar.setText("Editar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane1)
             .addGroup(layout.createSequentialGroup()
-                .addGap(69, 69, 69)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(btnExcluir)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(btnVoltar))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 240, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(91, Short.MAX_VALUE))
+                .addGap(127, 127, 127)
+                .addComponent(btnEditar)
+                .addGap(80, 80, 80)
+                .addComponent(btnExcluir)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 85, Short.MAX_VALUE)
+                .addComponent(btnVoltar)
+                .addGap(174, 174, 174))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(57, 57, 57)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(29, 29, 29)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 391, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnExcluir)
-                    .addComponent(btnVoltar))
-                .addContainerGap(41, Short.MAX_VALUE))
+                    .addComponent(btnVoltar)
+                    .addComponent(btnEditar))
+                .addGap(16, 16, 16))
         );
 
         pack();
@@ -159,10 +166,31 @@ public class TelaListagemLivro extends javax.swing.JFrame {
         
     }//GEN-LAST:event_btnExcluirActionPerformed
 
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+        int linha = tblLivros.getSelectedRow();
+    if (linha == -1) {
+        JOptionPane.showMessageDialog(this, "Selecione um livro");
+        return;
+    }
+
+    // pega os dados direto da tabela
+    int id = (int) tblLivros.getValueAt(linha, 0);        // ID
+    String titulo = (String) tblLivros.getValueAt(linha, 1); // Título
+    String autor = (String) tblLivros.getValueAt(linha, 2);  // Autor
+    String categoria = (String) tblLivros.getValueAt(linha, 3); // Categoria
+    int quantidade = (int) tblLivros.getValueAt(linha, 4);  // Quantidade
+
+    Livro livro = new Livro(id, titulo, autor, categoria, quantidade);
+TelaEditarEstoque dialog = new TelaEditarEstoque(this, livro);
+    dialog.setVisible(true); // 👈 ISSO FAZ A TELA ABRIR
+        
+    }//GEN-LAST:event_btnEditarActionPerformed
+ 
         
         
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnVoltar;
     private javax.swing.JScrollPane jScrollPane1;

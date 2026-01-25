@@ -71,7 +71,7 @@ public class LivroDAO {
     }
 
     // ✏️ ATUALIZAR LIVRO
-    public void atualizar(Livro livro) {
+    public void atualizarEstoque(Livro livro) {
         String sql = "UPDATE livros SET titulo=?, autor=?, categoria=?, quantidade=? WHERE id=?";
 
         try (Connection conn = Conexao.getConexao();
@@ -108,58 +108,38 @@ public class LivroDAO {
     }
 }
 
-    // 🔎 BUSCAR LIVRO (titulo, autor ou categoria)
-    public List<Livro> buscar(String termo) {
-        List<Livro> livros = new ArrayList<>();
-        String sql = "SELECT * FROM livros WHERE titulo LIKE ? OR autor LIKE ? OR categoria LIKE ?";
+ public Livro buscarPorId(int id) {
+    Livro livro = null;
+    String sql = "SELECT * FROM livros WHERE id = ?";
 
-        try (Connection conn = Conexao.getConexao();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
+    try (Connection conn = Conexao.getConexao();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
 
-            String filtro = "%" + termo + "%";
-            stmt.setString(1, filtro);
-            stmt.setString(2, filtro);
-            stmt.setString(3, filtro);
+        stmt.setInt(1, id);
+        ResultSet rs = stmt.executeQuery();
 
-            ResultSet rs = stmt.executeQuery();
-
-            while (rs.next()) {
-                Livro livro = new Livro();
-                livro.setId(rs.getInt("id"));
-                livro.setTitulo(rs.getString("titulo"));
-                livro.setAutor(rs.getString("autor"));
-                livro.setCategoria(rs.getString("categoria"));
-                livro.setQuantidade(rs.getInt("quantidade"));
-
-                livros.add(livro);
-            }
-
-        } catch (Exception e) {
-            e.printStackTrace();
+        if (rs.next()) {
+            livro = new Livro();
+            livro.setId(rs.getInt("id"));
+            livro.setTitulo(rs.getString("titulo"));
+            livro.setAutor(rs.getString("autor"));
+            livro.setCategoria(rs.getString("categoria"));
+            livro.setQuantidade(rs.getInt("quantidade"));
         }
 
-        return livros;
+    } catch (Exception e) {
+        e.printStackTrace();
     }
 
-    public boolean cadastrarLivro(Livro livro) {
-        String sql = "INSERT INTO livros (titulo, autor, categoria, quantidade) VALUES (?, ?, ?, ?)";
+    return livro;
+}
 
-        try (Connection conn = Conexao.getConexao();
-             PreparedStatement stmt = conn.prepareStatement(sql)) {
-
-            stmt.setString(1, livro.getTitulo());
-            stmt.setString(2, livro.getAutor());
-            stmt.setString(3, livro.getCategoria());
-            stmt.setInt(4, livro.getQuantidade());
-
-            stmt.executeUpdate();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return false;
+    public List<Livro> listarTodos() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
-    }
+
+    
+}
    
 
 
