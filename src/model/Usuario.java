@@ -18,5 +18,34 @@ package model;
 
     // getters e setters
 
+    public String getNome() {
+        return nome;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getSenha() {
+        return senha;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+ 
     
+    public void setSenha(String senha) {
+       this.senha = senha; 
+    }
+    
+    public void setNome(String nome){
+        this.nome = nome;
+             }
+   public void setTipoCLiente(){this.tipo = "CLIENTE";}  
+  
 }

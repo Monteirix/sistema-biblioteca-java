@@ -4,9 +4,10 @@
  */
 package View;
 
-import DAO.ClienteDAO;
+
+import DAO.UsuarioDAO;
 import javax.swing.JOptionPane;
-import model.Cliente;
+import model.Usuario;
 
 /**
  *
@@ -41,6 +42,8 @@ public class TelaCadastroCliente extends javax.swing.JDialog {
         txtConfirmarEmail = new javax.swing.JTextField();
         txtSenha = new javax.swing.JPasswordField();
         txtConfirmarSenha = new javax.swing.JPasswordField();
+        jLabel5 = new javax.swing.JLabel();
+        txtNome = new javax.swing.JTextField();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
 
@@ -59,13 +62,15 @@ public class TelaCadastroCliente extends javax.swing.JDialog {
             }
         });
 
+        jLabel5.setText("Nome:");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(btnCadastrar, javax.swing.GroupLayout.PREFERRED_SIZE, 151, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -79,13 +84,22 @@ public class TelaCadastroCliente extends javax.swing.JDialog {
                             .addComponent(txtConfirmarEmail, javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtEmail)
                             .addComponent(txtSenha)
-                            .addComponent(txtConfirmarSenha, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE))))
+                            .addComponent(txtConfirmarSenha, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 140, Short.MAX_VALUE)))
+                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
+                        .addGap(56, 56, 56)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtNome, javax.swing.GroupLayout.DEFAULT_SIZE, 137, Short.MAX_VALUE)))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(38, 38, 38)
+                .addGap(13, 13, 13)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(txtNome, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel1)
                     .addComponent(txtEmail, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -103,7 +117,7 @@ public class TelaCadastroCliente extends javax.swing.JDialog {
                     .addComponent(txtConfirmarSenha, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(28, 28, 28)
                 .addComponent(btnCadastrar)
-                .addContainerGap(75, Short.MAX_VALUE))
+                .addContainerGap(72, Short.MAX_VALUE))
         );
 
         pack();
@@ -112,7 +126,8 @@ public class TelaCadastroCliente extends javax.swing.JDialog {
     private void btnCadastrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCadastrarActionPerformed
         // TODO add your handling code here:
        
-
+    String nome = txtNome.getText();
+    
     String email = txtEmail.getText().trim();
     String confirmarEmail = txtConfirmarEmail.getText().trim();
 
@@ -120,7 +135,7 @@ public class TelaCadastroCliente extends javax.swing.JDialog {
     String confirmarSenha = new String(txtConfirmarSenha.getPassword());
 
     // 1️⃣ Validação de campos vazios
-    if (email.isEmpty() || confirmarEmail.isEmpty()
+    if (nome.isEmpty() || email.isEmpty() || confirmarEmail.isEmpty()
             || senha.isEmpty() || confirmarSenha.isEmpty()) {
 
         JOptionPane.showMessageDialog(this,
@@ -149,13 +164,15 @@ public class TelaCadastroCliente extends javax.swing.JDialog {
     }
 
     // 4️⃣ Criar objeto Cliente
-    Cliente cliente = new Cliente();
-    cliente.setEmail(email);
-    cliente.setSenha(senha);
+    Usuario usuario = new Usuario();
+    usuario.setNome(nome);
+    usuario.setEmail(email);
+    usuario.setSenha(senha);
 
+    usuario.setTipoCLiente();
     // 5️⃣ Salvar no banco
-    ClienteDAO dao = new ClienteDAO();
-    dao.cadastrar(cliente);
+    UsuarioDAO dao = new UsuarioDAO();
+    dao.cadastrar(usuario);
 
     // 6️⃣ Feedback + fechar dialog
     JOptionPane.showMessageDialog(this,
@@ -214,9 +231,11 @@ public class TelaCadastroCliente extends javax.swing.JDialog {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JTextField txtConfirmarEmail;
     private javax.swing.JPasswordField txtConfirmarSenha;
     private javax.swing.JTextField txtEmail;
+    private javax.swing.JTextField txtNome;
     private javax.swing.JPasswordField txtSenha;
     // End of variables declaration//GEN-END:variables
 }
