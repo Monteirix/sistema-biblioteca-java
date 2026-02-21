@@ -4,7 +4,12 @@
  */
 package View;
 
+import DAO.LivroDAO;
+import DAO.SolicitacaoDAO;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import model.Livro;
+import model.Solicitacao;
 
 /**
  *
@@ -17,8 +22,24 @@ public class TelaCliente extends javax.swing.JFrame {
      */
     public TelaCliente() {
         initComponents();
+        setLocationRelativeTo(null); // centraliza a janela
+        carregarTabela();
     }
+void carregarTabela() {
+        DefaultTableModel model = (DefaultTableModel) tblLivros.getModel();
+        model.setRowCount(0); // limpa tabela
 
+        LivroDAO dao = new LivroDAO();
+        for (Livro livro : dao.listar()) {
+            model.addRow(new Object[]{
+                livro.getId(),
+                livro.getTitulo(),
+                livro.getAutor(),
+                livro.getCategoria(),
+                livro.getQuantidade()
+            });
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -29,13 +50,13 @@ public class TelaCliente extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
-        btnComprar = new javax.swing.JButton();
+        tblLivros = new javax.swing.JTable();
+        btnSolicitar = new javax.swing.JButton();
         btnSair = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tblLivros.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null, null},
                 {null, null, null, null, null},
@@ -54,12 +75,12 @@ public class TelaCliente extends javax.swing.JFrame {
                 return types [columnIndex];
             }
         });
-        jScrollPane1.setViewportView(jTable1);
+        jScrollPane1.setViewportView(tblLivros);
 
-        btnComprar.setText("Comprar");
-        btnComprar.addActionListener(new java.awt.event.ActionListener() {
+        btnSolicitar.setText("Solicitar Doação");
+        btnSolicitar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnComprarActionPerformed(evt);
+                btnSolicitarActionPerformed(evt);
             }
         });
 
@@ -80,9 +101,9 @@ public class TelaCliente extends javax.swing.JFrame {
                 .addGap(64, 64, 64))
             .addGroup(layout.createSequentialGroup()
                 .addGap(181, 181, 181)
-                .addComponent(btnComprar)
-                .addGap(111, 111, 111)
-                .addComponent(btnSair, javax.swing.GroupLayout.PREFERRED_SIZE, 81, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnSolicitar)
+                .addGap(81, 81, 81)
+                .addComponent(btnSair, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -92,7 +113,7 @@ public class TelaCliente extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 303, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnComprar)
+                    .addComponent(btnSolicitar)
                     .addComponent(btnSair))
                 .addContainerGap(27, Short.MAX_VALUE))
         );
@@ -100,9 +121,67 @@ public class TelaCliente extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnComprarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprarActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnComprarActionPerformed
+    private void btnSolicitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSolicitarActionPerformed
+        int linha = tblLivros.getSelectedRow();
+
+if (linha == -1) {
+    JOptionPane.showMessageDialog(this, "Selecione um livro.");
+    return;
+}
+
+// Pega o ID da primeira coluna da tabela
+int idLivro = (int) tblLivros.getValueAt(linha, 0);
+
+LivroDAO livroDAO = new LivroDAO();
+Livro livro = livroDAO.buscarPorId(idLivro);
+
+// Verifica quantidade
+if (livro.getQuantidade() <= 0) {
+    JOptionPane.showMessageDialog(this, "Livro indisponível.");
+    return;
+}
+
+// Confirmação
+int confirm = JOptionPane.showConfirmDialog(
+        this,
+        "Deseja solicitar o livro \"" + livro.getTitulo() + "\"?",
+        "Confirmação",
+        JOptionPane.YES_NO_OPTION
+);
+
+if (confirm != JOptionPane.YES_OPTION) {
+    return;
+}
+
+SolicitacaoDAO solicitacaoDAO = new SolicitacaoDAO();
+
+// Verifica se já solicitou o livro
+if (solicitacaoDAO.jaSolicitou(1, livro.getId())) {
+    JOptionPane.showMessageDialog(this, "Você já solicitou este livro.");
+    return;
+}
+
+// Criar solicitação
+Solicitacao s = new Solicitacao();
+s.setIdUsuario(1); // ID fixo de teste
+s.setIdLivro(livro.getId());
+s.setDataSolicitacao(java.time.LocalDate.now());
+s.setStatus("RETIRADO");
+
+
+solicitacaoDAO.salvar(s);
+
+
+// Atualiza quantidade
+livro.setQuantidade(livro.getQuantidade() - 1);
+livroDAO.atualizar(livro);
+
+JOptionPane.showMessageDialog(this, "Livro solicitado com sucesso!");
+
+// Atualiza a tabela na tela
+carregarTabela();
+
+    }//GEN-LAST:event_btnSolicitarActionPerformed
 
     private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
         int resposta = JOptionPane.showConfirmDialog(
@@ -155,9 +234,9 @@ if (resposta == JOptionPane.YES_OPTION) {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnComprar;
     private javax.swing.JButton btnSair;
+    private javax.swing.JButton btnSolicitar;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
+    private javax.swing.JTable tblLivros;
     // End of variables declaration//GEN-END:variables
 }

@@ -134,9 +134,25 @@ public class LivroDAO {
     return livro;
 }
 
-    public List<Livro> listarTodos() {
-        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+   public void atualizar(Livro livro) {
+
+    String sql = "UPDATE livros SET titulo = ?, autor = ?, categoria = ?, quantidade = ? WHERE id = ?";
+
+    try (Connection conn = Conexao.getConexao();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        stmt.setString(1, livro.getTitulo());
+        stmt.setString(2, livro.getAutor());
+        stmt.setString(3, livro.getCategoria());
+        stmt.setInt(4, livro.getQuantidade());
+        stmt.setInt(5, livro.getId()); // ESSENCIAL, o WHERE id = ?
+
+        stmt.executeUpdate();
+
+    } catch (Exception e) {
+        e.printStackTrace();
     }
+}
 
     
 }
