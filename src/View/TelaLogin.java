@@ -4,7 +4,9 @@
  */
 package View;
 
+import DAO.UsuarioDAO;
 import javax.swing.JOptionPane;
+import model.Usuario;
 
 /**
  *
@@ -12,6 +14,7 @@ import javax.swing.JOptionPane;
  */
 public class TelaLogin extends javax.swing.JFrame {
 
+   private Usuario usuario ;
     /**
      * Creates new form TelaLogin
      */
@@ -118,28 +121,24 @@ public class TelaLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_txtEmailActionPerformed
 
     private void btnEntrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEntrarActionPerformed
-        // TODO add your handling code here:   
-        
-        String email = txtEmail.getText();
+   String email = txtEmail.getText();
 String senha = new String(txtSenha.getPassword());
 
-if (email.isEmpty() || senha.isEmpty()) {
-    JOptionPane.showMessageDialog(this, 
-        "Preencha todos os campos!",
-        "Erro",
-        JOptionPane.ERROR_MESSAGE
-    );
+// Login fake
+if(email.equalsIgnoreCase("admin@email.com") && senha.equals("123")){
+    new TelaAdm().setVisible(true);
+} 
+else if(email.equalsIgnoreCase("cliente@email.com") && senha.equals("123")){
+    new TelaCliente().setVisible(true);
+}
+else{
+    JOptionPane.showMessageDialog(this, "Email ou Senha Inválidos");
     return;
 }
 
-// TESTE TEMPORÁRIO
-if (email.equals("admin@email.com") && senha.equals("123")) {
-    JOptionPane.showMessageDialog(this, "Login ADMIN com sucesso!");
-    new TelaAdm().setVisible(true);
-    this.dispose();
-} else {
-    JOptionPane.showMessageDialog(this, "Email ou senha inválidos");
-}
+this.dispose();
+
+ 
     }//GEN-LAST:event_btnEntrarActionPerformed
 
     private void txtSenhaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtSenhaActionPerformed

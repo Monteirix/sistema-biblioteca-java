@@ -1,20 +1,12 @@
-    /*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package model;
 
-/**
- *
- * @author jogom
- */
 
-    public class Usuario {
-    private int id;
-    private String nome;
-    private String email;
-    private String senha;
-    private String tipo;
+public class Usuario {
+    public int id;
+    public String nome;
+    public String email;
+    public String senha;
+    public String tipo;
 
     // getters e setters
 
@@ -47,5 +39,13 @@ package model;
         this.nome = nome;
              }
    public void setTipoCLiente(){this.tipo = "CLIENTE";}  
+
+    public void setTipo(String string) {
+        this.tipo = tipo;
+    }
+
+    public void setId(int aInt) {
+        this.id = id;
+    }
   
 }

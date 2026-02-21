@@ -8,6 +8,9 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import model.Usuario;
 import util.Conexao;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 
 /**
  *
@@ -44,8 +47,48 @@ public class UsuarioDAO {
         }
     }
 
-   
+    
+
+    
+
+    public Usuario buscarPorEmailESenha(String email, String senha) {
+
+    Usuario usuario = null;
+    String sql = "SELECT * FROM usuarios WHERE email = ? AND senha = ?";
+
+    try (Connection conn = Conexao.getConexao();
+         PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+        stmt.setString(1, email);
+        stmt.setString(2, senha);
+
+        ResultSet rs = stmt.executeQuery();
+
+        if (rs.next()) {
+            usuario = new Usuario();
+            usuario.setId(rs.getInt("id"));
+            usuario.setEmail(rs.getString("email"));
+            usuario.setTipo(rs.getString("tipo"));
+
+            // DEBUG OBRIGATÓRIO
+            System.out.println("TIPO NO DAO: " + usuario.tipo);
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return usuario;
 }
+
+
+
+    
+}
+
+
+   
+
 
     
 
