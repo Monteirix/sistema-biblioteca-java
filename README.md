@@ -32,9 +32,9 @@ Desenvolver uma aplicação CRUD completa para gerenciamento de livros, aplicand
 
 - ✅ Cadastrar livro
 - ✅ Listar livros (JTable)
-- ⏳ Editar livro
-- ⏳ Excluir livro
-- ⏳ Buscar livro
+- ✅ Editar livro
+- ✅ Excluir livro
+- ✅ Buscar livro
 - 🔒 Integração com banco via DAO
 
 ---
